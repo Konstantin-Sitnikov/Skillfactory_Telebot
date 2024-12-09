@@ -30,18 +30,22 @@ def values(message):
 def currency_conversion(message):
     """Конвертер валют
 
-    Вызов статичного метода класса для проветки правильности введенных данных"""
+    1. Введёная фраза должна состоять из трех слов.
+    2. Фраза разбивается на 3 переменные и передается в статичны метод класса,
+    для выполнения ряда необходимых проверок и отправки запроса API
+    3. Вывод сообщения пользователю о возникающих ошибках.
+    4. Вывод сообщения пользователю с конвертированной валютой.
+    """
     try:
-        if len(message.text.split()) != 3: # Проверка корректности введенной фразы по длинне
+        if len(message.text.split()) != 3: # 1.
             raise APIException("Не правильно введён запрос.")
-        base, quote, amount = message.text.split()
+        base, quote, amount = message.text.split() # 2.
+        total = СurrencyСonversion.get_price(base, quote, amount) # 2.
 
-        total = СurrencyСonversion.get_price(base, quote, amount)
-
-    except APIException as e:
+    except APIException as e: # 3.
         bot.send_message(message.chat.id, f" {e}")
     else:
-        bot.send_message(message.chat.id, f" {amount} {base} в {quote}: {total}")
+        bot.send_message(message.chat.id, f" {amount} {base} в {quote}: {round(total, 2)}") # 4.
 
 
 
